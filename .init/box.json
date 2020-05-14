@@ -15,6 +15,6 @@
         "docker-compose.yml",
         "Dockerfile"
     ],
-    "output": "./bin/HelloWorld",
+    "output": "./bin/KVSQLite3",
     "force-autodiscovery": true
 }

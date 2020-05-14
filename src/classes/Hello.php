@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace KEINOS\HelloWorld;
+namespace KEINOS\KVSQLite3;
 
 final class Hello
 {

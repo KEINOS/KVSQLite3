@@ -6,7 +6,7 @@
  */
 declare(strict_types=1);
 
-namespace KEINOS\HelloWorld;
+namespace KEINOS\KVSQLite3;
 
 function sayHelloTo(string $name): string
 {

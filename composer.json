@@ -1,7 +1,7 @@
 {
     "name": "keinos/hello-world-tpl",
-    "description": "Overly cautious HelloWorld class. See the repo for details.",
-    "homepage": "https://github.com/KEINOS/TPL-PHP-HelloWorld",
+    "description": "Overly cautious KVSQLite3 class. See the repo for details.",
+    "homepage": "https://github.com/KEINOS/TPL-PHP-KVSQLite3",
     "type": "library",
     "license": "Apache-2.0",
     "authors": [
@@ -18,15 +18,15 @@
         },
         {
             "name": "contributors",
-            "homepage": "https://github.com/KEINOS/TPL-PHP-HelloWorld/graphs/contributors",
+            "homepage": "https://github.com/KEINOS/TPL-PHP-KVSQLite3/graphs/contributors",
             "role": "Contributors"
         }
     ],
     "support": {
         "issues": "https://github.com/KEINOS/Dockerfile_of_Alpine/issues",
-        "source": "https://github.com/KEINOS/TPL-PHP-HelloWorld"
+        "source": "https://github.com/KEINOS/TPL-PHP-KVSQLite3"
     },
-    "bin": ["bin/HelloWorld"],
+    "bin": ["bin/KVSQLite3"],
     "require": {
         "php": "^8.0 || ^7.1",
         "ext-mbstring": "*"
@@ -51,7 +51,7 @@
     },
     "autoload": {
         "psr-4": {
-            "KEINOS\\HelloWorld\\": "src/classes"
+            "KEINOS\\KVSQLite3\\": "src/classes"
         },
         "files": [
             "src/functions.php"

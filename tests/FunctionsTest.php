@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace KEINOS\HelloWorld;
+namespace KEINOS\KVSQLite3;
 
 use \KEINOS\Tests\TestCase;
 
 final class FunctionSayHelloToTest extends TestCase
 {
-    public function testHelloWorld()
+    public function testKVSQLite3()
     {
         $this->assertSame('Hello, World!', sayHelloTo('World'));
     }

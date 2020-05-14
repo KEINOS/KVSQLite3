@@ -8,11 +8,11 @@
  */
 declare(strict_types=1);
 
-namespace KEINOS\HelloWorld;
+namespace KEINOS\KVSQLite3;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use KEINOS\HelloWorld\Hello;
+use KEINOS\KVSQLite3\Hello;
 
 $hello = new Hello();
 $name  = 'KEINOS';
