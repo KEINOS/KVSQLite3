@@ -6,9 +6,20 @@ namespace KEINOS\Tests;
 
 final class EncodeThenDecodeDataMethodsTest extends TestCase
 {
-    private \KEINOS\KVSQLite3\KVSQLite3 $obj;
-    private \ReflectionMethod $encodeData;
-    private \ReflectionMethod $decodeData;
+    /**
+     * @var \KEINOS\KVSQLite3\KVSQLite3
+     */
+    private $obj;
+
+    /**
+     * @var \ReflectionMethod
+     */
+    private $encodeData;
+
+    /**
+     * @var \ReflectionMethod
+     */
+    private $decodeData;
 
     public function setUp(): void
     {

@@ -7,7 +7,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * @var array
      */
-    public array $list_path_file_temp = [];
+    public $list_path_file_temp = [];
 
     public const PREFIX_FILE_TEMP = 'UnitTest-';
 

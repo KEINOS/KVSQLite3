@@ -28,7 +28,6 @@ final class DeleteMethodTest extends TestCase
 
         // Default message (2nd arg in "get()") set
         $expect = 'default dummy return value' . hash('md5', strval(microtime()));
-        ;
         $actual = $db->get($key, $expect);
         $msg_error  = 'If the key does not exist default value in arg should return.';
         $this->assertSame($expect, $actual, $msg_error);
@@ -61,7 +60,6 @@ final class DeleteMethodTest extends TestCase
 
         // 2nd arg set
         $expect = 'default dummy return value' . hash('md5', strval(microtime()));
-        ;
         $actual = $db->get($key, $expect);
         $msg_error = 'If the key does not exist default value in arg should return.';
         $this->assertSame($expect, $actual, $msg_error);

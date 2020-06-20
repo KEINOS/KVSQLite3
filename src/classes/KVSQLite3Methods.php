@@ -191,7 +191,7 @@ trait KVSQLite3Methods
      * @param  string $msg_append Additional message to append.
      * @return string
      */
-    private function formatMessageExceptionError(object $e, string $msg_append = ''): string
+    private function formatMessageExceptionError($e, string $msg_append = ''): string
     {
         $msg_error  = '';
         $msg_append = trim($msg_append);

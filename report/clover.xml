@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1592625312">
-  <project timestamp="1592625312">
+<coverage generated="1592640047">
+  <project timestamp="1592640047">
     <package name="KEINOS\KVSQLite3">
       <file name="/workspaces/KVSQLite3/src/classes/KVSQLite3.php">
         <class name="KEINOS\KVSQLite3\KVSQLite3" namespace="KEINOS\KVSQLite3">
@@ -16,13 +16,13 @@
         <line num="34" type="stmt" count="1"/>
         <line num="35" type="stmt" count="1"/>
         <line num="37" type="stmt" count="64"/>
-        <line num="39" type="method" name="clear" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="39" type="method" name="clear" visibility="public" complexity="2" crap="6.00" count="0"/>
         <line num="41" type="stmt" count="0"/>
         <line num="42" type="stmt" count="0"/>
         <line num="44" type="stmt" count="0"/>
         <line num="47" type="method" name="delete" visibility="public" complexity="1" crap="1" count="6"/>
         <line num="49" type="stmt" count="6"/>
-        <line num="52" type="method" name="deleteMultiple" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="52" type="method" name="deleteMultiple" visibility="public" complexity="2" crap="6.00" count="0"/>
         <line num="54" type="stmt" count="0"/>
         <line num="55" type="stmt" count="0"/>
         <line num="56" type="stmt" count="0"/>
@@ -38,16 +38,16 @@
         <line num="73" type="stmt" count="12"/>
         <line num="74" type="stmt" count="12"/>
         <line num="76" type="stmt" count="9"/>
-        <line num="80" type="method" name="getMultiple" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="80" type="method" name="getMultiple" visibility="public" complexity="2" crap="6.00" count="0"/>
         <line num="82" type="stmt" count="0"/>
         <line num="83" type="stmt" count="0"/>
         <line num="84" type="stmt" count="0"/>
         <line num="87" type="stmt" count="0"/>
-        <line num="90" type="method" name="has" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="90" type="method" name="has" visibility="public" complexity="1" crap="2.00" count="0"/>
         <line num="92" type="stmt" count="0"/>
         <line num="95" type="method" name="set" visibility="public" complexity="1" crap="1" count="30"/>
         <line num="97" type="stmt" count="30"/>
-        <line num="100" type="method" name="setMultiple" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="100" type="method" name="setMultiple" visibility="public" complexity="2" crap="6.00" count="0"/>
         <line num="102" type="stmt" count="0"/>
         <line num="103" type="stmt" count="0"/>
         <line num="104" type="stmt" count="0"/>
@@ -57,7 +57,7 @@
         <metrics loc="114" ncloc="105" classes="1" methods="10" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="38" coveredstatements="20" elements="48" coveredelements="24"/>
       </file>
       <file name="/workspaces/KVSQLite3/src/classes/KVSQLite3Methods.php">
-        <class name="KEINOS\KVSQLite3\KVSQLite3Methods" namespace="KEINOS\KVSQLite3">
+        <class name="KVSQLite3Methods" namespace="KEINOS\KVSQLite3">
           <metrics complexity="42" methods="18" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="110" coveredstatements="77" elements="128" coveredelements="86"/>
         </class>
         <line num="39" type="method" name="convertTtlToSeconds" visibility="private" complexity="6" crap="17.95" count="12"/>
@@ -114,7 +114,7 @@
         <line num="200" type="stmt" count="13"/>
         <line num="202" type="stmt" count="13"/>
         <line num="204" type="stmt" count="13"/>
-        <line num="210" type="method" name="getLifeTimeDefault" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="210" type="method" name="getLifeTimeDefault" visibility="private" complexity="1" crap="2.00" count="0"/>
         <line num="212" type="stmt" count="0"/>
         <line num="218" type="method" name="getMsgErrorInvalidKey" visibility="private" complexity="1" crap="1" count="6"/>
         <line num="221" type="stmt" count="6"/>
@@ -156,7 +156,7 @@
         <line num="350" type="stmt" count="6"/>
         <line num="351" type="stmt" count="6"/>
         <line num="354" type="stmt" count="34"/>
-        <line num="361" type="method" name="isDBInMemory" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="361" type="method" name="isDBInMemory" visibility="private" complexity="1" crap="2.00" count="0"/>
         <line num="363" type="stmt" count="0"/>
         <line num="373" type="method" name="openDB" visibility="private" complexity="1" crap="1" count="65"/>
         <line num="375" type="stmt" count="65"/>
@@ -191,7 +191,7 @@
         <metrics loc="450" ncloc="239" classes="1" methods="18" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="110" coveredstatements="77" elements="128" coveredelements="86"/>
       </file>
       <file name="/workspaces/KVSQLite3/src/classes/KVSQLite3Properties.php">
-        <class name="KEINOS\KVSQLite3\KVSQLite3Properties" namespace="KEINOS\KVSQLite3">
+        <class name="KVSQLite3Properties" namespace="KEINOS\KVSQLite3">
           <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
         </class>
         <metrics loc="50" ncloc="19" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
