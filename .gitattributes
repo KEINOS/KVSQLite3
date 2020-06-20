@@ -3,5 +3,22 @@
 *.{cmd,[cC][mM][dD]} text eol=crlf
 *.{bat,[bB][aA][tT]} text eol=crlf
 
+# Exclude the unnecessary files below from composer package.
+/.devcontainer export-ignore
+/.init export-ignore
+/.testcontainer export-ignore
+/.vscode export-ignore
+/bench
+/report
+/samples
+/tests
+/.dockerignore
+/.gitignore
+/.phpcs.xml
+/.travis.yml
+/CONTRIBUTE.md
+/docker-compose.yml
+/PULL_REQUEST.md
+
 # Let GitHub ignore the below dir/files to detect the languages used in this repo.
 /.*/* linguist-vendored

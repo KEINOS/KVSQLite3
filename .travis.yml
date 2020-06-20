@@ -27,4 +27,4 @@ matrix:
   allow_failures:
     - php: nightly
 
-script: /bin/bash ./tests/run-tests.sh local all
+script: /bin/bash ./tests/run-tests.sh local all verbose

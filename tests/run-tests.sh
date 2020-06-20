@@ -1,14 +1,76 @@
 #!/bin/bash
-
 # =============================================================================
+#  Test script.
+#
+#  This file should be called via "composer test" command. See "scripts" in
+#  "/composer.json".
+# =============================================================================
+
+MSG_HELP=$(cat << 'HEREDOC'
+
+- Basic Commands
+
+    $ composer test
+    $ composer bench
+    $ composer compile
+
+    test      ... Run the tests and/or analyzers in local or docker. For
+                  detailed usage see the next section.
+    bench     ... Run benchmarks in "./bench" dir.
+    compile   ... Creates a Phar archive under "./bin" dir.
+
+- Basic Test Command Usage
+
+    composer test [option option ...]
+
+    $ composer test
+    $ composer test help
+
+    $ composer test local
+    $ composer test docker
+
+    $ composer test phpmd
+    $ composer test phpstan psalm
+    $ composer test phpmd psalm local
+    $ composer test all
+    $ composer test all verbose
+
+    Without an option, only unit test will be run.
+
+- Available Options
+
+    build        ... Re-builds the Docker container for testing.
+    help         ... Shows this help.
+
+    verbose      ... Displays test results in verbose mode.
+    requirement  ... Check package requirement for developing
+    diagnose     ... Diagnoses composer
+
+    phan
+    coveralls
+    phpcs
+    phpmd
+    phpunit
+    phpstan
+    psalm
+
+    phpcbf       ... Fix the marked sniff violations of PHPCS.
+    psalter      ... Run Psalter via Psalm with --alter option.
+
+
+HEREDOC
+)
+
+# -----------------------------------------------------------------------------
 #  Functions
 #
-#    - Constants, the variables that won't be changed, are in "CAPITAL_SNAKE_CASES".
+#  Notes:
+#    - Constant variables that won't be changed are in "CAPITAL_SNAKE_CASES".
 #    - Global variables that might be changed are in "lower_snake_cases".
 #    - Function names are in "lowerCamelCases()".
-#    - "getter" functions begins with "get" and must be used as "foo=$(getMyValue)".
-# =============================================================================
-
+#    - "getter" functions begins with "get" and must be used as:
+#        foo=$(getMyValue)
+# -----------------------------------------------------------------------------
 function buildContainerTest() {
     echoTitle 'Rebuilding test container'
 
@@ -45,12 +107,13 @@ function echoErrorHR() {
 }
 
 function echoFlagOptions() {
-    echo 'requirement diagnose phpcs phpunit phpstan psalm phan coveralls'
+    echo 'requirement diagnose phpcs phpmd phpcbf phpunit phpstan psalm phan coveralls'
 }
 
 function echoHelpOption() {
     echo '- Available Option Flags:'
     echo "    $(echoFlagOptions) (To test all use: all)"
+    echo "    (optional for auto fix) psalter phpcbf"
 }
 
 function echoHR() {
@@ -161,7 +224,34 @@ function isInstalledPackage() {
     return 1
 }
 
-function isInstalledRequirements() {
+function isRequirementsInstallable() {
+    ! isComposerInstalled && {
+        flag_installable_requirements=1
+    }
+
+    [ "${flag_installable_requirements:+defined}" ] && {
+        return $flag_installable_requirements
+    }
+
+    [ "${1}" = "verbose" ] && {
+        indent='    '
+        result=$(composer install --dry-run 2>&1 3>&1)
+        flag_installable_requirements=$?
+        echo
+        echo "${result}" |
+            while read line; do
+                echo "${indent}${line}"
+            done
+        echo
+    } || {
+        composer install --dry-run 2>/dev/null 1>/dev/null
+        flag_installable_requirements=$?
+    }
+
+    return $flag_installable_requirements
+}
+
+function isRequirementsInstalled() {
     isInstalledPackage phpunit &&
         isInstalledPackage phan &&
         isInstalledPackage php-coveralls &&
@@ -236,7 +326,7 @@ function runCoveralls() {
         --verbose \
         --no-interaction \
         $option_dry_run
-    return $?
+    [ $? -eq 0 ] && return 0 || return 1
 }
 
 function runDiagnose() {
@@ -246,7 +336,7 @@ function runDiagnose() {
         return 2
     }
     composer diagnose
-    return $?
+    [ $? -eq 0 ] && return 0 || return 1
 }
 
 function runPhan() {
@@ -259,7 +349,17 @@ function runPhan() {
         ./vendor/bin/phan \
         --allow-polyfill-parser \
         --directory ./src
-    return $?
+    [ $? -eq 0 ] && return 0 || return 1
+}
+
+function runPhpcbf() {
+    echoTitle 'FIX: Fix the marked sniff violations'
+    # Skip if option not set
+    ! isFlagSet 'phpcbf' && {
+        return 2
+    }
+    ./vendor/bin/phpcbf -v
+    [ $? -eq 0 ] && return 0 || return 1
 }
 
 function runPHPCS() {
@@ -269,7 +369,17 @@ function runPHPCS() {
         return 2
     }
     ./vendor/bin/phpcs -v
-    return $?
+    [ $? -eq 0 ] && return 0 || return 1
+}
+
+function runPHPMD() {
+    echoTitle 'TEST: PHPMD (Mess Detector)'
+    # Skip if option not set
+    ! isFlagSet 'phpmd' && {
+        return 2
+    }
+    ./vendor/bin/phpmd ./src ansi ./tests/conf/phpmd.xml
+    [ $? -eq 0 ] && return 0 || return 1
 }
 
 function runPHPStan() {
@@ -280,7 +390,7 @@ function runPHPStan() {
     }
     ./vendor/bin/phpstan \
         analyse src --level=max
-    return $?
+    [ $? -eq 0 ] && return 0 || return 1
 }
 
 function runPHPUnit() {
@@ -299,21 +409,34 @@ function runPHPUnit() {
     ./vendor/bin/phpunit \
         --configuration ./tests/conf/phpunit.xml \
         $option_testdox
-    return $?
+    [ $? -eq 0 ] && return 0 || return 1
 }
 
 function runPsalm() {
-    echoTitle 'TEST: PSalm (w/ alter and issue=all option)'
     # Skip if option not set
     ! isFlagSet 'psalm' && {
         return 2
     }
+
+    # Psalm fails with relative paths so specify as absolute path
+    path_dir_current=$(getPathScript)
+    path_dir_parent=$(dirname "${path_dir_current}")
+    path_file_conf_psalm="${path_dir_current}/conf/psalm.xml"
+
+    title_temp='TEST: PSalm'
+    # Set psalter option if specified
+    use_alter=''
+    isFlagSet 'psalter' && {
+        use_alter='--alter --issues=all'
+        title_temp="${title_temp} (w/ alter and issue=all option)"
+    }
+    echoTitle "${title_temp}"
     ./vendor/bin/psalm.phar \
-        --config=./tests/conf/psalm.xml \
-        --root ./src \
-        --alter \
-        --issues=all
-    return $?
+        --config="${path_file_conf_psalm}" \
+        --root="${path_dir_parent}" \
+        --show-info=true \
+        $use_alter
+    [ $? -eq 0 ] && return 0 || return 1
 }
 
 function runRequirementCheck() {
@@ -324,7 +447,7 @@ function runRequirementCheck() {
         return 2
     }
 
-    isInstalledRequirements || {
+    isRequirementsInstalled || {
         echoErrorHR '❌  Missing: composer packages.'
         echo '- Required packages for testing missing. Run "composer install" to install them.'
         exit 1
@@ -354,8 +477,7 @@ function runTestsInContainer() {
     docker-compose run \
         -e SCREEN_WIDTH=$SCREEN_WIDTH \
         $NAME_SERVICE_TEST "${@}"
-
-    return $?
+    [ $? -eq 0 ] && return 0 || return 1
 }
 
 function setFlagsTestAllUp() {
@@ -382,6 +504,11 @@ function setOptionPHPUnitTestdox() {
     }
 }
 
+function showHelp() {
+    echoTitle 'Help for developing this package.'
+    echo "${MSG_HELP}"
+}
+
 # =============================================================================
 #  Setup
 # =============================================================================
@@ -406,6 +533,11 @@ all_tests_passed=0
 # -----------------------------------------------------------------------------
 #  Flag Option Setting
 # -----------------------------------------------------------------------------
+isFlagSet 'help' && {
+    showHelp
+    exit $?
+}
+
 isFlagSet 'build' && {
     buildContainerTest
     exit $?
@@ -451,51 +583,46 @@ isFlagSet 'docker' && {
     }
 }
 
-function isRequirementsInstallable() {
-    ! isComposerInstalled && {
-        flag_is_installable_requirements=1
-    }
-
-    [ "${flag_is_installable_requirements:+defined}" ] && {
-        return $flag_is_installable_requirements
-    }
-
-    composer install --dry-run 2>/dev/null 1>/dev/null
-    flag_is_installable_requirements=$?
-
-    return $flag_is_installable_requirements
-}
-
 # =============================================================================
 #  Main
 #  Run the actual tests.
 # =============================================================================
 #  Requirement check (Exit if not)
-! isInstalledRequirements 2>/dev/null 1>/dev/null && {
+! isRequirementsInstalled 2>/dev/null 1>/dev/null && {
     echoErrorHR '❌  ERROR: Requirements not installed'
-    echoError '- Please install the requirements for testing.'
+    echoError '  - Please install the requirements for testing.'
 
     isDockerInstalled && {
-        echoError '💡  Docker is installed but it is not available to use.'
-        echoError '- Docker engine might be down. Check if Docker is running.'
+        ! isDockerAvailable && {
+            echoErrorHR '💡  Docker is installed but it is not available to use.'
+            echoError '  - Docker engine might be down. Check if Docker is running.'
+        } || {
+            echoErrorHR '💡  Docker is installed and available.'
+            echoError '  - Consider running without "local" option.'
+        }
     }
 
     isComposerInstalled || {
         echoErrorHR '❌  Composer NOT installed.'
-        echoError '- You need Docker or PHP composer to run this tests.'
+        echoError '  - You need Docker or PHP composer to run this tests.'
         exit 1
     }
 
-    echoError '💡  Composer is installed.'
-    echoError '- Checking if requirements can be installed in local ... (This may take time)'
-    isRequirementsInstallable && {
+    echoErrorHR '💡  Composer is installed.'
+    echoError '  - Checking if requirements can be installed in local ... (This may take time)'
+    isRequirementsInstallable verbose && {
         echoError '💡  Requirements can be installed.'
-        echoError '- Run the below command to install your requirements in local.'
+        echoError '  - Run the below command to install your requirements in local.'
         echoError '    $ composer install'
     }
 
+    echoError '  ❌  Composer packages can not be installed. See the above messages.'
     exit 1
 }
+
+# Update autoload
+echoAlert 'Dumping composer autoload files'
+composer dump-autoload
 
 # Set minimum test
 list_option_given="${list_option_given} phpunit"
@@ -519,8 +646,10 @@ isFlagSet 'all' && {
 # Run tests
 runTest 'Check Requirements' runRequirementCheck
 runTest 'Diagnose' runDiagnose
+runTest 'PHPCBF' runPhpcbf
 runTest 'PHPCS' runPHPCS
 runTest 'PHPUnit' runPHPUnit
+runTest 'PHPMD' runPHPMD
 runTest 'PHPStan' runPHPStan
 runTest 'Psalm' runPsalm
 runTest 'Phan' runPhan

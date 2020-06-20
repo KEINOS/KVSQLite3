@@ -1,19 +1,23 @@
 {
     "base-path": "./",
-    "main": "./src/Main.php",
+    "main": "./sample/Main.php",
     "blacklist": [
         ".devcontainer",
         ".testcontainer",
         ".vscode",
-        ".init",
+        "bench",
+        "bin",
         "report",
         "tests",
         ".dockerignore",
         ".gitattributes",
         ".gitignore",
+        ".phpcs.xml",
+        ".scrutinizer.yml",
         ".travis.yml",
         "docker-compose.yml",
-        "Dockerfile"
+        "Dockerfile",
+        "PULL_REQUEST"
     ],
     "output": "./bin/KVSQLite3",
     "force-autodiscovery": true
