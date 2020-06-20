@@ -23,7 +23,7 @@
     },
     "bin": ["bin/kvsqlite3"],
     "require": {
-        "php": "^8.0 || ^7.2",
+        "php": "^8.0 || ^7.1",
         "ext-mbstring": "*",
         "ext-sqlite3": "*",
         "ext-hash": "*",
