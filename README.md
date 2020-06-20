@@ -7,28 +7,30 @@ Nothing Relational to Relational Databases.
 
 require_once(__DIR__ . '/../vendor/autoload.php');
 
-// Create storage.
-$db = new \KEINOS\KVSQLite3('sample.db');
-
-// Set a value. Key as 'foo' and value as 'bar'
-$db->set('foo', 'bar');
-$db->set('baz', ['qux', 'quux']);
-
-// Get a value. Typical way.
 try {
-  echo $db->get('foo'), PHP_EOL;
+    // Create storage.
+    $db = new \KEINOS\KVSQLite3('sample.db');
+
+    // Set a values.
+    $db->set('foo', 'bar');
+    $db->set('baz', ['qux', 'quux']);
+
+    // Get value.
+    echo $db->get('foo'), PHP_EOL;
+
+    // Get a value with default return value.
+    echo $db->get('hoge', '"hoge" does not exist.'), PHP_EOL;
+
+    // Delete a value.
+    $db->delete('foo');
+
+    // Dump data as SQL queries to a file.
+    $db->dump('sample.sql');
 } catch (\RuntimeException $e) {
-  echo '"foo" does not exist.', PHP_EOL;
+    $msg = 'ERROR:' . $e->getMessage() . PHP_EOL;
+    echo $msg;
 }
 
-// Get a value with default return value if the key doesn't exist.
-echo $db->get('foo', '"foo" does not exist.'), PHP_EOL;
-
-// Delete a value.
-$db->delete('foo');
-
-// Dump data as SQL queries to a file.
-$db->dump('sample.sql');
 ```
 
 ```php
